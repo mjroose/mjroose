@@ -6,6 +6,7 @@ from flask_jwt import JWT
 from db import db
 from security import authenticate, identity
 from settings import APP_SECRET_KEY
+from resources.client import Client, ClientList
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 from resources.user import UserRegister
@@ -33,6 +34,8 @@ jwt = JWT(app, authenticate, identity)
 # This returns an access token.  Use the token by:
 # Creating a header of Authorization: JWT ___access token___
 
+api.add_resource(Client, '/client/<int:_id>')
+api.add_resource(ClientList, '/clients')
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
 api.add_resource(Store, '/store/<string:name>')
