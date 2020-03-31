@@ -5,6 +5,7 @@ from flask_jwt import JWT
 
 from db import db
 from security import authenticate, identity
+from settings import APP_SECRET_KEY
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 from resources.user import UserRegister
@@ -12,7 +13,7 @@ from resources.user import UserRegister
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'udemy'
+app.secret_key = APP_SECRET_KEY
 api = Api(app)
 
 app.config['JWT_AUTH_URL_RULE'] = '/login'

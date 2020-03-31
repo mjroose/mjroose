@@ -1,4 +1,5 @@
 bcrypt
+python-dotenv
 flask
 flask-restful
 flask-sqlalchemy
