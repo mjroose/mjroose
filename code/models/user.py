@@ -1,3 +1,5 @@
+from bcrypt import gensalt, hashpw
+
 from db import db
 
 class UserModel(db.Model):
@@ -8,9 +10,9 @@ class UserModel(db.Model):
     password_hash = db.Column(db.String(80))
     role = db.Column(db.String(10))
 
-    def __init__(self, email, password_hash, role):
+    def __init__(self, email, password, role):
         self.email = email
-        self.password_hash = password_hash
+        self.password_hash = hashpw(password.encode('utf8'), gensalt())
         self.role = role
     
     @classmethod

@@ -16,6 +16,7 @@ app.secret_key = 'udemy'
 api = Api(app)
 
 app.config['JWT_AUTH_URL_RULE'] = '/login'
+app.config['JWT_AUTH_USERNAME_KEY'] = 'email'
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=1800)
 #app.config['JWT_AUTH_USERNAME_KEY'] = 'email'
 

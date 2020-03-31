@@ -1,3 +1,4 @@
+bcrypt
 flask
 flask-restful
 flask-sqlalchemy
