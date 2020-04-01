@@ -1,8 +1,7 @@
 from bcrypt import gensalt, hashpw
 
 from db import db
-from models.client import ClientModel
-from joins.attorneys_clients import attorneys_clients
+from joins.attorneys_cases import attorneys_cases
 from utils.person import get_full_name
 
 class UserModel(db.Model):
@@ -19,7 +18,7 @@ class UserModel(db.Model):
     attorney_number = db.Column(db.String(8))
     phone_number = db.Column(db.String(14))
     address = db.Column(db.String(200))
-    clients = db.relationship('ClientModel', secondary=attorneys_clients, lazy='subquery')
+    cases = db.relationship('CaseModel', secondary=attorneys_cases, lazy='subquery')
 
     def __init__(self, email, password, role, first_name, middle_initial, last_name, attorney_number='', phone_number='', address=''):
         self.email = email
@@ -32,7 +31,7 @@ class UserModel(db.Model):
         self.attorney_number = attorney_number
         self.phone_number = phone_number
         self.address = address
-        self.clients = []
+        self.cases = []
     
     @classmethod
     def find_by_email(cls, email):
@@ -55,7 +54,7 @@ class UserModel(db.Model):
                 'attorney_number': self.attorney_number,
                 'phone_number': self.phone_number,
                 'address': self.address,
-                'client_ids': [client.id for client in self.clients]
+                'case_ids': [case.id for case in self.cases]
             }
         else:
             return {

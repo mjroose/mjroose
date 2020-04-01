@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
 
 from models.case import CaseModel
+from models.user import UserModel
 from parsers.case import case_parser
 
 # TODO:  Add JWT requirement
@@ -27,6 +28,9 @@ class Case(Resource):
             return {'message': 'Unable to locate a case with that id.'}, 404
 
         data = case_parser.parse_args()
+        data['attorneys'] = [attorney for attorney in UserModel.all_attorneys() if attorney.id in data['attorney_ids']]
+        del data['attorney_ids']
+
         case.update_in_db(data)
 
         return case.json()
@@ -37,6 +41,9 @@ class CaseList(Resource):
 
     def post(self):
         data = case_parser.parse_args()
+        data['attorneys'] = [attorney for attorney in UserModel.all_attorneys() if data['attorney_ids'] is not None and attorney.id in data['attorney_ids']]
+        del data['attorney_ids']
+        
         case = CaseModel(**data)
 
         try:

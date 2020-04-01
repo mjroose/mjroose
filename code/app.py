@@ -7,7 +7,7 @@ from db import db
 from security import authenticate, identity
 from settings import APP_SECRET_KEY
 from resources.case import Case, CaseList
-from resources.client import Client, ClientList
+from resources.client import Client, ClientList, ClientCaseList
 from resources.user import User, UserRegister
 
 app = Flask(__name__)
@@ -35,6 +35,7 @@ jwt = JWT(app, authenticate, identity)
 
 api.add_resource(Case, '/case/<int:_id>')
 api.add_resource(CaseList, '/cases')
+api.add_resource(ClientCaseList, '/client/<int:client_id>/cases')
 api.add_resource(Client, '/client/<int:_id>')
 api.add_resource(ClientList, '/clients')
 api.add_resource(User, '/user/<int:_id>')

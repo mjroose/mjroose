@@ -1,5 +1,4 @@
 from db import db
-from joins.attorneys_clients import attorneys_clients
 from utils.person import get_full_name
 
 class ClientModel(db.Model):
@@ -19,11 +18,10 @@ class ClientModel(db.Model):
     email = db.Column(db.String(80))
     address = db.Column(db.String(200))
     cases = db.relationship('CaseModel', lazy='dynamic')
-    attorneys = db.relationship('UserModel', secondary=attorneys_clients, lazy='subquery')
 
     # TODO:  add cases, attorneys, documents, notes
 
-    def __init__(self, first_name, middle_initial, last_name, gender, birthdate, place_of_birth, last_grade_completed, citizen, phone_number, email, address, attorneys):
+    def __init__(self, first_name, middle_initial, last_name, gender, birthdate, place_of_birth, last_grade_completed, citizen, phone_number, email, address):
         self.first_name = first_name
         self.middle_initial = middle_initial
         self.last_name = last_name
@@ -36,8 +34,6 @@ class ClientModel(db.Model):
         self.phone_number = phone_number
         self.email = email
         self.address = address
-        for attorney in attorneys:
-            self.attorneys.append(attorney)
     
     def json(self):
         return {
@@ -54,10 +50,9 @@ class ClientModel(db.Model):
             'phone_number': self.phone_number,
             'email': self.email,
             'address': self.address,
-            'cases': [case.id() for case in self.cases],
-            'attorney_ids': [user.id for user in self.attorneys]
+            'case_ids': [case.id for case in self.cases]
         }
-    
+   
     @classmethod
     def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
@@ -69,8 +64,7 @@ class ClientModel(db.Model):
     def update_in_db(self, data):
         if self.first_name != data['first_name'] or self.middle_initial != data['middle_initial'] or self.last_name != data['last_name']:
             data['full_name'] = get_full_name(data['first_name'], data['middle_initial'], data['last_name'])
-        self.attorneys = data['attorneys']
-        del data['attorneys']
+
         self.query.filter_by(id=self.id).update(data)
         db.session.commit()
     

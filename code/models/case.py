@@ -1,4 +1,6 @@
 from db import db
+from joins.attorneys_cases import attorneys_cases
+from models.client import ClientModel
 
 class CaseModel(db.Model):
     __tablename__ = 'cases'
@@ -8,17 +10,21 @@ class CaseModel(db.Model):
     number = db.Column(db.String(21))
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'))
     client = db.relationship('ClientModel')
+    attorneys = db.relationship('UserModel', secondary=attorneys_cases, lazy='subquery')
 
     # TODO:  add cases, attorneys, documents
 
-    def __init__(self, number, client_id):
+    def __init__(self, number, client_id, attorneys):
         self.number = number
-        self.client_id = client_id
+        self.client = ClientModel.find_by_id(client_id)
+        for attorney in attorneys:
+            self.attorneys.append(attorney)
     
     def json(self):
         return {
-            'client_id': self.client_id,
-            'number': self.number
+            'client_id': self.client.id,
+            'number': self.number,
+            'attorney_ids': [user.id for user in self.attorneys]
         }
 
     @classmethod
@@ -30,9 +36,16 @@ class CaseModel(db.Model):
         db.session.commit()
     
     def update_in_db(self, data):
+        self.attorneys = data['attorneys']
+        del data['attorneys']
+
         self.query.filter_by(id=self.id).update(data)
         db.session.commit()
     
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
+
+    @classmethod
+    def all(cls):
+        return cls.query.all()

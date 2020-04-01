@@ -1,8 +1,8 @@
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
 
+from models.case import CaseModel
 from models.client import ClientModel
-from models.user import UserModel
 from parsers.client import client_parser
 
 # TODO:  Add JWT requirement
@@ -28,8 +28,6 @@ class Client(Resource):
             return {'message': 'Unable to locate a client with that id.'}, 404
 
         data = client_parser.parse_args()
-        data['attorneys'] = [attorney for attorney in UserModel.all_attorneys() if attorney.id in data['attorney_ids']]
-        del data['attorney_ids']
 
         client.update_in_db(data)
 
@@ -41,8 +39,6 @@ class ClientList(Resource):
 
     def post(self):
         data = client_parser.parse_args()
-        data['attorneys'] = [attorney for attorney in UserModel.all_attorneys() if data['attorney_ids'] is not None and attorney.id in data['attorney_ids']]
-        del data['attorney_ids']
 
         client = ClientModel(**data)
 
@@ -51,3 +47,10 @@ class ClientList(Resource):
         except:
             return {'message': 'An error occurred inserting the item.'}, 500
         return client.json(), 201
+
+class ClientCaseList(Resource):
+    def get(self, client_id):
+        return {
+            'id': client_id,
+            'cases': [case.json() for case in CaseModel.all() if client_id == case.client.id]
+        }
