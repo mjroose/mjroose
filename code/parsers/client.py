@@ -56,3 +56,8 @@ client_parser.add_argument('address',
     required=True,
     help="Fields cannot be left blank!"
 )
+client_parser.add_argument('attorney_ids',
+    type=int,
+    action='append',
+    required=False
+)
