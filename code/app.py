@@ -8,8 +8,6 @@ from security import authenticate, identity
 from settings import APP_SECRET_KEY
 from resources.case import Case, CaseList
 from resources.client import Client, ClientList
-from resources.item import Item, ItemList
-from resources.store import Store, StoreList
 from resources.user import User, UserRegister
 
 app = Flask(__name__)
@@ -39,10 +37,6 @@ api.add_resource(Case, '/case/<int:_id>')
 api.add_resource(CaseList, '/cases')
 api.add_resource(Client, '/client/<int:_id>')
 api.add_resource(ClientList, '/clients')
-api.add_resource(Item, '/item/<string:name>')
-api.add_resource(ItemList, '/items')
-api.add_resource(Store, '/store/<string:name>')
-api.add_resource(StoreList, '/stores')
 api.add_resource(User, '/user/<int:_id>')
 api.add_resource(UserRegister, '/users')
 
