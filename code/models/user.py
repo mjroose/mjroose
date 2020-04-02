@@ -2,6 +2,8 @@ from bcrypt import gensalt, hashpw
 
 from db import db
 from joins.attorneys_cases import attorneys_cases
+from models.case import CaseModel
+from models.client import ClientModel
 from utils.person import get_full_name
 
 class UserModel(db.Model):
@@ -82,3 +84,11 @@ class UserModel(db.Model):
     @classmethod
     def all_attorneys(cls):
         return [user for user in cls.query.all() if user.role == 'Attorney']
+
+    @classmethod
+    def attorney_case_list(cls, _id):
+        CaseModel.filter_by_attorney(cls.find_by_id(_id))
+
+    @classmethod
+    def attorney_client_list(cls, _id):
+        pass

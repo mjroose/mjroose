@@ -8,7 +8,7 @@ from security import authenticate, identity
 from settings import APP_SECRET_KEY
 from resources.case import Case, CaseList
 from resources.client import Client, ClientList, ClientCaseList
-from resources.user import User, UserRegister
+from resources.user import AttorneyCaseList, AttorneyClientList, User, UserRegister
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
@@ -19,7 +19,6 @@ api = Api(app)
 app.config['JWT_AUTH_URL_RULE'] = '/login'
 app.config['JWT_AUTH_USERNAME_KEY'] = 'email'
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=1800)
-#app.config['JWT_AUTH_USERNAME_KEY'] = 'email'
 
 @app.before_first_request
 def create_tables():
@@ -33,6 +32,8 @@ jwt = JWT(app, authenticate, identity)
 # This returns an access token.  Use the token by:
 # Creating a header of Authorization: JWT ___access token___
 
+api.add_resource(AttorneyCaseList, '/attorney/<int:_id>/cases')
+api.add_resource(AttorneyClientList, '/attorney/<int:_id>/clients')
 api.add_resource(Case, '/case/<int:_id>')
 api.add_resource(CaseList, '/cases')
 api.add_resource(ClientCaseList, '/client/<int:client_id>/cases')
