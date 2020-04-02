@@ -22,6 +22,7 @@ class CaseModel(db.Model):
     
     def json(self):
         return {
+            'id': self.id,
             'client_id': self.client.id,
             'number': self.number,
             'attorney_ids': [user.id for user in self.attorneys]
