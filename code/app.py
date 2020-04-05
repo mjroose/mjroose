@@ -8,6 +8,8 @@ from security import authenticate, identity
 from settings import APP_SECRET_KEY
 from resources.case import Case, CaseList
 from resources.client import Client, ClientList, ClientCaseList
+from resources.service_document import ServiceDocument, ServiceDocumentList
+from resources.envelope import Envelope, EnvelopeList
 from resources.user import AttorneyCaseList, AttorneyClientList, User, UserRegister
 
 app = Flask(__name__)
@@ -39,6 +41,10 @@ api.add_resource(CaseList, '/cases')
 api.add_resource(ClientCaseList, '/client/<int:client_id>/cases')
 api.add_resource(Client, '/client/<int:_id>')
 api.add_resource(ClientList, '/clients')
+api.add_resource(ServiceDocument, '/service_document/<int:_id>')
+api.add_resource(ServiceDocumentList, '/service_documents')
+api.add_resource(Envelope, '/envelope/<int:_id>')
+api.add_resource(EnvelopeList, '/envelopes')
 api.add_resource(User, '/user/<int:_id>')
 api.add_resource(UserRegister, '/users')
 

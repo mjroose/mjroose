@@ -11,6 +11,7 @@ class CaseModel(db.Model):
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'))
     client = db.relationship('ClientModel')
     attorneys = db.relationship('UserModel', secondary=attorneys_cases, lazy='subquery')
+    envelopes = db.relationship('EnvelopeModel')
 
     # TODO:  add cases, attorneys, documents
 

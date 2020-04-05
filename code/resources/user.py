@@ -8,12 +8,12 @@ from parsers.user import user_parser
 class AttorneyCaseList(Resource):
     def get(self, _id):
         cases =  CaseModel.query.join(CaseModel.attorneys).filter(UserModel.id == _id)
-        return [case.json() for case in cases]
+        return {'cases': [case.json() for case in cases]}
 
 class AttorneyClientList(Resource):
     def get(self, _id):
         clients =  ClientModel.query.join(CaseModel.client).join(CaseModel.attorneys).filter(UserModel.id == _id)
-        return [client.json() for client in clients]
+        return {'clients': [client.json() for client in clients]}
 
 class User(Resource):
     def get(self, _id):
